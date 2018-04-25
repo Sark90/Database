@@ -20,7 +20,7 @@ public class Test {
     }
 
     private void menu() {
-        System.out.print("1. Тестирование\n2. Результаты порйденных тестов\nВведите № команды: ");
+        System.out.print("1. Тестирование\n2. Результаты пройденных тестов\nВведите № команды: ");
         int n;
         Scanner scanner = new Scanner(System.in);
         while (true) {
@@ -31,13 +31,26 @@ public class Test {
         else showResults();
     }
 
-    private void showResults() {    //TODO: count tests & right answers
+    private void showResults() {
         try {
             Statement s1 = con.createStatement();
             ResultSet rsTests = s1.executeQuery("select T.test_id, TH.theme, Q.question, AN.answer, " +
-                    "AN.is_right from themes TH, questions Q, answers AN, tests T where" +
-                    "TH.id=T.theme_id and Q.id=T.question_id and AN.id=T.answer_id and T.student_id=" + studentID +
-                    "order by theme_id, question_id");
+                    "AN.is_right from themes TH, questions Q, answers AN, tests T where TH.id=T.theme_id " +
+                    "and Q.id=T.question_id and AN.id=T.answer_id and T.student_id=" + studentID +
+                    "order by test_id");  //order by theme_id, question_id
+            int testsNum = 0, rightNum = 0;
+            while (rsTests.next()) {
+                System.out.println("Тест №" + rsTests.getInt(1));
+                System.out.println("Тема: " + rsTests.getString(2));
+                System.out.println("Вопрос: " + rsTests.getString(3));
+                System.out.print("Ответ: " + rsTests.getString(4) + " (");
+                testsNum++;
+                if (rsTests.getBoolean(5)) {
+                    System.out.println("верно)");
+                    rightNum++;
+                } else System.out.println("неверно)");
+            }
+            System.out.println("\tВерных ответов " + rightNum + " из " + testsNum);
         } catch (SQLException e) {
             e.printStackTrace();
         }
