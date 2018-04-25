@@ -15,14 +15,44 @@ public class Test {
     public void run() {
         connect();
         authorize();
-        runTest();
+        menu();
+        //runTest();
         close();
     }
 
-    private void runTest() {
+    private void menu() {
+        System.out.print("1. Тестирование\n2. Результаты порйденных тестов\nВведите № команды: ");
+        int n;
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            n = scanner.nextInt();
+            if (n == 1 || n == 2) break;
+        }
+        if (n == 1) runTest();
+        else showResults();
+    }
+
+    private void showResults() {    //TODO: How to write select?
+        try {
+            Statement s1 = con.createStatement();
+            ResultSet rsTests = s1.executeQuery("SELECT * FROM tests where student_id=" + studentID +
+                    "order by theme_id, question_id");
+            Statement s2 = con.createStatement();
+            ResultSet rs = s2.executeQuery("SELECT * FROM tests where student_id=" + studentID);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void runTest() {    //TODO: count tests & right answers?
         System.out.println("Темы для тестов:");
         try {
-            Scanner scanner = new Scanner(System.in);
+            Statement s3 = con.createStatement();
+            ResultSet rsMaxID = s3.executeQuery("select max(test_id) from tests");
+            rsMaxID.next();
+            int testID = rsMaxID.getInt(1);
+            testID++;
+            s3.close();
             ResultSet rsThemes = stmt.executeQuery("SELECT * FROM themes");
             while (rsThemes.next()) {
                 System.out.println(rsThemes.getString("id") + ". " +
@@ -30,34 +60,45 @@ public class Test {
             }
             rsThemes.close();
             System.out.print("Выберите тему: ");
+            Scanner scanner = new Scanner(System.in);
             int themeID = scanner.nextInt();
-            ResultSet rsQuestions = stmt.executeQuery("SELECT * FROM questions where theme_id=" +
+            Statement s = con.createStatement();
+            ResultSet rsQuestions = s.executeQuery("SELECT * FROM questions where theme_id=" +
                     themeID);
             while (rsQuestions.next()) {
                 Statement s1 = con.createStatement();
-                ResultSet rsAnswers = s1/*stmt*/.executeQuery("SELECT * FROM answers where question_id=" +
-                        rsQuestions.getString("ID"));
+                ResultSet rsAnswers = s1.executeQuery("SELECT * FROM answers where question_id=" +
+                        rsQuestions.getString("ID") + "order by variant");
                 System.out.println(rsQuestions.getString("question"));
                 while (rsAnswers.next()) {
                     System.out.println(rsAnswers.getString("variant") + ". " +
                             rsAnswers.getString("answer"));
                 }
                 System.out.print("Выберите вариант ответа (A/B/C): ");
-                char variant = scanner.next().charAt(0);
+                char variant;
+                while (true) {
+                    variant = scanner.next().charAt(0);
+                    if (variant == 'A' || variant == 'B' || variant == 'C') break;
+                }
                 Statement s2 = con.createStatement();
-                ResultSet rsUserAnswer = /*stmt*/s2.executeQuery("SELECT * FROM answers where question_id=" +
+                ResultSet rsUserAnswer = s2.executeQuery("SELECT * FROM answers where question_id=" +
                         rsQuestions.getString("ID") + " and variant=\'" + variant + "\';");
                 rsUserAnswer.next();
-                if (rsUserAnswer.getBoolean("is_right")) System.out.println("Верно.");
+                if (rsUserAnswer.getBoolean("is_right")) {
+                    System.out.println("Верно.");
+                }
                 else System.out.println("Неверно.");
-                stmt.execute("insert into TESTS (student_id, theme_id, question_id, answer_id)" +
-                        " values (" + studentID + ", " + themeID + ", " +
+                stmt.execute("insert into TESTS (test_id, student_id, theme_id, question_id, answer_id)" +
+                        " values (" + testID + ", " + studentID + ", " + themeID + ", " +
                         rsQuestions.getInt("ID") + ", " + rsUserAnswer.getInt("ID") +
                         ");");
                 rsUserAnswer.close();
+                s2.close();
                 rsAnswers.close();
+                s1.close();
             }
-            rsQuestions.close();    //TODO: all ResultSets close in close()?
+            rsQuestions.close();
+            s.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
