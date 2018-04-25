@@ -4,12 +4,8 @@ import java.sql.*;
 import java.util.Scanner;
 
 public class Test {
-    private static String driver = "org.postgresql.Driver";
-    private static String url = "jdbc:postgresql://localhost:5432/TESTING";
-    private static String login = "postgres";
-    private static String password = "admin";
     private Connection con;
-    private Statement stmt;
+    private Statement stmt; //TODO: make all Statements local
     private int studentID;
 
     public void run() {
@@ -118,7 +114,10 @@ public class Test {
 
     private void connect() {
         try {
-            Class.forName(driver);
+            Class.forName("org.postgresql.Driver");
+            String url = "jdbc:postgresql://localhost:5432/TESTING";
+            String login = "postgres";
+            String password = "admin";
             con = DriverManager.getConnection(url, login, password);
             stmt = con.createStatement();
         } catch (Exception e) {
@@ -126,6 +125,7 @@ public class Test {
         }
 
     }
+
     private void close() {
         try {
             stmt.close();
@@ -163,6 +163,7 @@ public class Test {
             e.printStackTrace();
         }
     }
+
     private void addStudent(String fName, String lName) {
         try {
             stmt.execute("INSERT INTO students (f_name, l_name) VALUES (\'"
