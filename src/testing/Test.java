@@ -4,15 +4,20 @@ import java.sql.*;
 import java.util.Scanner;
 
 public class Test {
+    private static String dbName = "TESTING";
     private Connection con;
     private Statement stmt; //TODO: make all Statements local
     private int studentID;
 
     public void run() {
+        initDB();   //TODO: if not exists?, if empty
         connect();
         authorize();
         menu();
         close();
+    }
+
+    private void initDB() {
     }
 
     private void menu() {
@@ -115,7 +120,7 @@ public class Test {
     private void connect() {
         try {
             Class.forName("org.postgresql.Driver");
-            String url = "jdbc:postgresql://localhost:5432/TESTING";
+            String url = "jdbc:postgresql://localhost:5432/" + dbName;
             String login = "postgres";
             String password = "admin";
             con = DriverManager.getConnection(url, login, password);
