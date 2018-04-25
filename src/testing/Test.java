@@ -16,7 +16,6 @@ public class Test {
         connect();
         authorize();
         menu();
-        //runTest();
         close();
     }
 
@@ -32,19 +31,19 @@ public class Test {
         else showResults();
     }
 
-    private void showResults() {    //TODO: How to write select?
+    private void showResults() {    //TODO: count tests & right answers
         try {
             Statement s1 = con.createStatement();
-            ResultSet rsTests = s1.executeQuery("SELECT * FROM tests where student_id=" + studentID +
+            ResultSet rsTests = s1.executeQuery("select T.test_id, TH.theme, Q.question, AN.answer, " +
+                    "AN.is_right from themes TH, questions Q, answers AN, tests T where" +
+                    "TH.id=T.theme_id and Q.id=T.question_id and AN.id=T.answer_id and T.student_id=" + studentID +
                     "order by theme_id, question_id");
-            Statement s2 = con.createStatement();
-            ResultSet rs = s2.executeQuery("SELECT * FROM tests where student_id=" + studentID);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    private void runTest() {    //TODO: count tests & right answers?
+    private void runTest() {
         System.out.println("Темы для тестов:");
         try {
             Statement s3 = con.createStatement();

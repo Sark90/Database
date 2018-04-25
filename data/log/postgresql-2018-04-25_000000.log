@@ -1,0 +1,252 @@
+2018-04-25 09:26:37.270 EEST [5068] СООБЩЕНИЕ:  не удалось получить данные от клиента: An existing connection was forcibly closed by the remote host.
+	
+2018-04-25 09:27:49.758 EEST [7348] СООБЩЕНИЕ:  не удалось получить данные от клиента: An existing connection was forcibly closed by the remote host.
+	
+2018-04-25 09:29:55.775 EEST [720] СООБЩЕНИЕ:  не удалось получить данные от клиента: An existing connection was forcibly closed by the remote host.
+	
+2018-04-25 09:32:06.565 EEST [7860] СООБЩЕНИЕ:  не удалось получить данные от клиента: An existing connection was forcibly closed by the remote host.
+	
+2018-04-25 09:44:21.549 EEST [6072] СООБЩЕНИЕ:  не удалось получить данные от клиента: An existing connection was forcibly closed by the remote host.
+	
+2018-04-25 10:01:57.792 EEST [7464] ОШИБКА:  столбец th.theme_id не существует (символ 99)
+2018-04-25 10:01:57.792 EEST [7464] ПОДСКАЗКА:  Возможно, предполагалась ссылка на столбец "q.theme_id".
+2018-04-25 10:01:57.792 EEST [7464] ОПЕРАТОР:  select TH.theme, Q.question, AN.answer, AN.is_right from themes TH, questions Q, answers AN where
+	TH.theme_id in (select theme_id from tests where student_id=1) and
+	Q.question_id in (select question_id from tests where student_id=1) and
+	AN.answer_id in (select answer_id from tests where student_id=1)
+	
+2018-04-25 10:04:36.512 EEST [7464] ОШИБКА:  столбец th.theme_id не существует (символ 99)
+2018-04-25 10:04:36.512 EEST [7464] ПОДСКАЗКА:  Возможно, предполагалась ссылка на столбец "q.theme_id".
+2018-04-25 10:04:36.512 EEST [7464] ОПЕРАТОР:  select TH.theme, Q.question, AN.answer, AN.is_right from themes TH, questions Q, answers AN where
+	TH.theme_id in (select theme_id from tests where student_id=1)
+	--and Q.question_id in (select question_id from tests where student_id=1)
+	--and AN.answer_id in (select answer_id from tests where student_id=1)
+2018-04-25 10:05:41.158 EEST [7464] ОШИБКА:  столбец th.theme_id не существует (символ 103)
+2018-04-25 10:05:41.158 EEST [7464] ПОДСКАЗКА:  Возможно, предполагалась ссылка на столбец "q.theme_id".
+2018-04-25 10:05:41.158 EEST [7464] ОПЕРАТОР:  select TH.theme/*, Q.question, AN.answer, AN.is_right*/ from themes TH, questions Q, answers AN where
+	TH.theme_id in (select theme_id from tests where student_id=1)
+	--and Q.question_id in (select question_id from tests where student_id=1)
+	--and AN.answer_id in (select answer_id from tests where student_id=1)
+2018-04-25 10:06:06.187 EEST [7464] ОШИБКА:  столбец th.theme_id не существует (символ 107)
+2018-04-25 10:06:06.187 EEST [7464] ПОДСКАЗКА:  Возможно, предполагалась ссылка на столбец "th.theme".
+2018-04-25 10:06:06.187 EEST [7464] ОПЕРАТОР:  select TH.theme/*, Q.question, AN.answer, AN.is_right*/ from themes TH/*, questions Q, answers AN*/ where
+	TH.theme_id in (select theme_id from tests where student_id=1)
+	--and Q.question_id in (select question_id from tests where student_id=1)
+	--and AN.answer_id in (select answer_id from tests where student_id=1)
+2018-04-25 10:06:21.720 EEST [7464] ОШИБКА:  столбец th.theme_id не существует (символ 104)
+2018-04-25 10:06:21.720 EEST [7464] ПОДСКАЗКА:  Возможно, предполагалась ссылка на столбец "th.theme".
+2018-04-25 10:06:21.720 EEST [7464] ОПЕРАТОР:  select theme/*, Q.question, AN.answer, AN.is_right*/ from themes TH/*, questions Q, answers AN*/ where
+	TH.theme_id in (select theme_id from tests where student_id=1)
+	--and Q.question_id in (select question_id from tests where student_id=1)
+	--and AN.answer_id in (select answer_id from tests where student_id=1)
+2018-04-25 10:06:47.916 EEST [7464] ОШИБКА:  столбец "theme_id" не существует (символ 104)
+2018-04-25 10:06:47.916 EEST [7464] ПОДСКАЗКА:  Возможно, предполагалась ссылка на столбец "themes.theme".
+2018-04-25 10:06:47.916 EEST [7464] ОПЕРАТОР:  select theme/*, Q.question, AN.answer, AN.is_right*/ from themes /*TH, questions Q, answers AN*/ where
+	theme_id in (select theme_id from tests where student_id=1)
+	--and Q.question_id in (select question_id from tests where student_id=1)
+	--and AN.answer_id in (select answer_id from tests where student_id=1)
+2018-04-25 10:31:36.845 EEST [7464] ОШИБКА:  повторяющееся значение ключа нарушает ограничение уникальности "tests_pkey"
+2018-04-25 10:31:36.845 EEST [7464] ПОДРОБНОСТИ:  Ключ "(test_id)=(1)" уже существует.
+2018-04-25 10:31:36.845 EEST [7464] ОПЕРАТОР:  --select * from tests order by test_id
+	
+	update tests set test_id=1
+2018-04-25 10:32:10.951 EEST [7464] ОШИБКА:  повторяющееся значение ключа нарушает ограничение уникальности "tests_pkey"
+2018-04-25 10:32:10.951 EEST [7464] ПОДРОБНОСТИ:  Ключ "(test_id)=(1)" уже существует.
+2018-04-25 10:32:10.951 EEST [7464] ОПЕРАТОР:  --select * from tests order by test_id
+	update tests set test_id=1
+2018-04-25 10:33:33.116 EEST [7464] ОШИБКА:  повторяющееся значение ключа нарушает ограничение уникальности "tests_pkey"
+2018-04-25 10:33:33.116 EEST [7464] ПОДРОБНОСТИ:  Ключ "(test_id)=(1)" уже существует.
+2018-04-25 10:33:33.116 EEST [7464] ОПЕРАТОР:  --select * from tests order by test_id
+	update tests set test_id=1
+2018-04-25 10:33:37.878 EEST [7464] ОШИБКА:  ошибка синтаксиса (примерное положение: "update") (символ 38)
+2018-04-25 10:33:37.878 EEST [7464] ОПЕРАТОР:  select * from tests order by test_id
+	update tests set test_id=1
+2018-04-25 10:46:25.342 EEST [6352] ОШИБКА:  повторяющееся значение ключа нарушает ограничение уникальности "tests_pkey"
+2018-04-25 10:46:25.342 EEST [6352] ПОДРОБНОСТИ:  Ключ "(test_id)=(1)" уже существует.
+2018-04-25 10:46:25.342 EEST [6352] ОПЕРАТОР:  insert into TESTS (test_id, student_id, theme_id, question_id, answer_id) values (1, 1, 2, 5, 13)
+2018-04-25 11:09:28.457 EEST [7464] ОШИБКА:  подзапрос в выражении вернул больше одной строки
+2018-04-25 11:09:28.457 EEST [7464] ОПЕРАТОР:  select /*T.test_id,*/ TH.theme, Q.question, AN.answer, AN.is_right from themes TH, questions Q, answers AN/*, tests T*/ where
+	TH.id = (select theme_id from tests where student_id=1)
+	and Q.id = (select question_id from tests where student_id=1)
+	and AN.id = (select answer_id from tests where student_id=1)
+	--order by test_id
+2018-04-25 11:09:34.534 EEST [7464] ОШИБКА:  ошибка синтаксиса (примерное положение: "in") (символ 1)
+2018-04-25 11:09:34.534 EEST [7464] ОПЕРАТОР:  in
+2018-04-25 11:09:37.955 EEST [7464] ОШИБКА:  ошибка синтаксиса (примерное положение: "in") (символ 1)
+2018-04-25 11:09:37.955 EEST [7464] ОПЕРАТОР:  in
+2018-04-25 11:58:53.292 EEST [7824] ОШИБКА:  ошибка синтаксиса (примерное положение: "id") (символ 35)
+2018-04-25 11:58:53.292 EEST [7824] ОПЕРАТОР:  select * from tests where student id=1 order by test_id as TESTS1;
+	/*select /*T.test_id,*/ TH.theme, Q.question, AN.answer, AN.is_right from themes TH, questions Q, answers AN/*, tests T*/ where
+	TH.id in (select theme_id from tests where student_id=1)
+	and Q.id in (select question_id from tests where student_id=1)
+	and AN.id in (select answer_id from tests where student_id=1)*/
+2018-04-25 11:59:18.347 EEST [7824] ОШИБКА:  ошибка синтаксиса (примерное положение: "id") (символ 35)
+2018-04-25 11:59:18.347 EEST [7824] ОПЕРАТОР:  select * from tests where student id=1 as TESTS1 order by test_id;
+	/*select /*T.test_id,*/ TH.theme, Q.question, AN.answer, AN.is_right from themes TH, questions Q, answers AN/*, tests T*/ where
+	TH.id in (select theme_id from tests where student_id=1)
+	and Q.id in (select question_id from tests where student_id=1)
+	and AN.id in (select answer_id from tests where student_id=1)*/
+2018-04-25 11:59:27.621 EEST [7824] ОШИБКА:  ошибка синтаксиса (примерное положение: "id") (символ 45)
+2018-04-25 11:59:27.621 EEST [7824] ОПЕРАТОР:  select * from tests as TESTS1 where student id=1 order by test_id;
+	/*select /*T.test_id,*/ TH.theme, Q.question, AN.answer, AN.is_right from themes TH, questions Q, answers AN/*, tests T*/ where
+	TH.id in (select theme_id from tests where student_id=1)
+	and Q.id in (select question_id from tests where student_id=1)
+	and AN.id in (select answer_id from tests where student_id=1)*/
+2018-04-25 11:59:36.159 EEST [7824] ОШИБКА:  ошибка синтаксиса (примерное положение: "id") (символ 35)
+2018-04-25 11:59:36.159 EEST [7824] ОПЕРАТОР:  select * from tests where student id=1 order by test_id;
+	/*select /*T.test_id,*/ TH.theme, Q.question, AN.answer, AN.is_right from themes TH, questions Q, answers AN/*, tests T*/ where
+	TH.id in (select theme_id from tests where student_id=1)
+	and Q.id in (select question_id from tests where student_id=1)
+	and AN.id in (select answer_id from tests where student_id=1)*/
+2018-04-25 12:07:32.517 EEST [7464] ОШИБКА:  отношение "an" не существует (символ 221)
+2018-04-25 12:07:32.517 EEST [7464] ОПЕРАТОР:  select /*T.test_id,*/ TH.theme, Q.question, AN.answer, AN.is_right from themes TH, questions Q, answers AN/*, tests T*/ where
+	TH.id in (select theme_id from tests where student_id=1)
+	and Q.id in (select question_id from AN where AN.id in (select answer_id from tests where student_id=1))
+	--and AN.id in (select answer_id from tests where student_id=1)
+	
+	--select * from tests where student id=1 order by test_id 
+2018-04-25 12:09:01.297 EEST [7464] ОШИБКА:  отношение "an" не существует (символ 221)
+2018-04-25 12:09:01.297 EEST [7464] ОПЕРАТОР:  select /*T.test_id,*/ TH.theme, Q.question, AN.answer, AN.is_right from themes TH, questions Q, answers AN/*, tests T*/ where
+	TH.id in (select theme_id from tests where student_id=1)
+	and Q.id in (select question_id from AN where AN.id in (select answer_id from tests where student_id=1))
+	--and AN.id in (select answer_id from tests where student_id=1)
+	
+	--select * from tests where student id=1 order by test_id 
+2018-04-25 12:40:25.806 EEST [7464] ОШИБКА:  ошибка синтаксиса (примерное положение: "where") (символ 121)
+2018-04-25 12:40:25.806 EEST [7464] ОПЕРАТОР:  select /*T.test_id,*/ TH.theme, Q.question, AN.answer, AN.is_right from themes TH, questions Q, answers AN, /*tests T*/ where
+	TH.id in
+	(select theme_id from tests where student_id=1 order by test_id)
+	and Q.id in (select question_id from tests where student_id=1 order by test_id)
+	and AN.id in (select answer_id from tests where student_id=1 order by test_id)
+	/*
+		(select theme_id from questions where questions.id in 		
+			(select question_id from answers where answers.id in
+				(select answer_id from tests where student_id=1)
+			)
+		)	
+	and Q.id in
+		(select question_id from answers where answers.id in
+			(select answer_id from tests where student_id=1)
+		)
+	and AN.id in (select answer_id from tests where student_id=1)
+	*/
+	--and Q.id in (select question_id from answers where answers.id in (select answer_id from tests where student_id=1))
+	--and AN.id in (select answer_id from tests where student_id=1)
+	
+	--select * from tests where student id=1 order by test_id 
+2018-04-25 12:40:33.645 EEST [7464] ОШИБКА:  ошибка синтаксиса (примерное положение: "where") (символ 121)
+2018-04-25 12:40:33.645 EEST [7464] ОПЕРАТОР:  select /*T.test_id,*/ TH.theme, Q.question, AN.answer, AN.is_right from themes TH, questions Q, answers AN, /*tests T*/ where
+	TH.id in
+	(select theme_id from tests where student_id=1 order by test_id)
+	and Q.id in (select question_id from tests where student_id=1 order by test_id)
+	--and AN.id in (select answer_id from tests where student_id=1 order by test_id)
+	/*
+		(select theme_id from questions where questions.id in 		
+			(select question_id from answers where answers.id in
+				(select answer_id from tests where student_id=1)
+			)
+		)	
+	and Q.id in
+		(select question_id from answers where answers.id in
+			(select answer_id from tests where student_id=1)
+		)
+	and AN.id in (select answer_id from tests where student_id=1)
+	*/
+	--and Q.id in (select question_id from answers where answers.id in (select answer_id from tests where student_id=1))
+	--and AN.id in (select answer_id from tests where student_id=1)
+	
+	--select * from tests where student id=1 order by test_id 
+2018-04-25 12:40:35.406 EEST [7464] ОШИБКА:  ошибка синтаксиса (примерное положение: "where") (символ 121)
+2018-04-25 12:40:35.406 EEST [7464] ОПЕРАТОР:  select /*T.test_id,*/ TH.theme, Q.question, AN.answer, AN.is_right from themes TH, questions Q, answers AN, /*tests T*/ where
+	TH.id in
+	(select theme_id from tests where student_id=1 order by test_id)
+	and Q.id in (select question_id from tests where student_id=1 order by test_id)
+	and AN.id in (select answer_id from tests where student_id=1 order by test_id)
+	/*
+		(select theme_id from questions where questions.id in 		
+			(select question_id from answers where answers.id in
+				(select answer_id from tests where student_id=1)
+			)
+		)	
+	and Q.id in
+		(select question_id from answers where answers.id in
+			(select answer_id from tests where student_id=1)
+		)
+	and AN.id in (select answer_id from tests where student_id=1)
+	*/
+	--and Q.id in (select question_id from answers where answers.id in (select answer_id from tests where student_id=1))
+	--and AN.id in (select answer_id from tests where student_id=1)
+	
+	--select * from tests where student id=1 order by test_id 
+2018-04-25 12:40:49.474 EEST [7464] ОШИБКА:  ошибка синтаксиса (примерное положение: "where") (символ 121)
+2018-04-25 12:40:49.474 EEST [7464] ОПЕРАТОР:  select /*T.test_id,*/ TH.theme, Q.question, AN.answer, AN.is_right from themes TH, questions Q, answers AN, /*tests T*/ where
+	TH.id in
+	(select theme_id from tests where student_id=1)
+	and Q.id in (select question_id from tests where student_id=1)
+	and AN.id in (select answer_id from tests where student_id=1)
+	/*
+		(select theme_id from questions where questions.id in 		
+			(select question_id from answers where answers.id in
+				(select answer_id from tests where student_id=1)
+			)
+		)	
+	and Q.id in
+		(select question_id from answers where answers.id in
+			(select answer_id from tests where student_id=1)
+		)
+	and AN.id in (select answer_id from tests where student_id=1)
+	*/
+	--and Q.id in (select question_id from answers where answers.id in (select answer_id from tests where student_id=1))
+	--and AN.id in (select answer_id from tests where student_id=1)
+	
+	--select * from tests where student id=1 order by test_id 
+2018-04-25 12:41:17.226 EEST [7464] ОШИБКА:  ошибка синтаксиса (примерное положение: "where") (символ 121)
+2018-04-25 12:41:17.226 EEST [7464] ОПЕРАТОР:  select /*T.test_id,*/ TH.theme, Q.question, AN.answer, AN.is_right from themes TH, questions Q, answers AN, /*tests T*/ where
+	TH.id in /*
+	(select theme_id from tests where student_id=1)
+	and Q.id in (select question_id from tests where student_id=1)
+	and AN.id in (select answer_id from tests where student_id=1)	*/
+	
+		(select theme_id from questions where questions.id in 		
+			(select question_id from answers where answers.id in
+				(select answer_id from tests where student_id=1)
+			)
+		)	
+	and Q.id in
+		(select question_id from answers where answers.id in
+			(select answer_id from tests where student_id=1)
+		)
+	and AN.id in (select answer_id from tests where student_id=1)
+	
+	--and Q.id in (select question_id from answers where answers.id in (select answer_id from tests where student_id=1))
+	--and AN.id in (select answer_id from tests where student_id=1)
+	
+	--select * from tests where student id=1 order by test_id 
+2018-04-25 12:41:27.271 EEST [7464] ОШИБКА:  ошибка синтаксиса (примерное положение: "where") (символ 121)
+2018-04-25 12:41:27.271 EEST [7464] ОПЕРАТОР:  select /*T.test_id,*/ TH.theme, Q.question, AN.answer, AN.is_right from themes TH, questions Q, answers AN, /*tests T*/ where
+	TH.id in 
+	(select theme_id from tests where student_id=1)
+	and Q.id in (select question_id from tests where student_id=1)
+	and AN.id in (select answer_id from tests where student_id=1)	
+	/*
+		(select theme_id from questions where questions.id in 		
+			(select question_id from answers where answers.id in
+				(select answer_id from tests where student_id=1)
+			)
+		)	
+	and Q.id in
+		(select question_id from answers where answers.id in
+			(select answer_id from tests where student_id=1)
+		)
+	and AN.id in (select answer_id from tests where student_id=1)
+	*/
+	--and Q.id in (select question_id from answers where answers.id in (select answer_id from tests where student_id=1))
+	--and AN.id in (select answer_id from tests where student_id=1)
+	
+	--select * from tests where student id=1 order by test_id 
+2018-04-25 13:32:33.182 EEST [7464] ОШИБКА:  таблица "tests" отсутствует в предложении FROM (символ 133)
+2018-04-25 13:32:33.182 EEST [7464] ОПЕРАТОР:  select /*T.test_id,*/ TH.theme, Q.question, AN.answer, AN.is_right from themes TH, questions Q, answers AN/*, tests T*/ where
+	TH.id=tests.theme_id
+	and Q.id=tests.question_id
+	and AN.id=tests.answer_id
+	--in (select answer_id from tests where student_id=1)
