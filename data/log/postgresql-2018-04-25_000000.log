@@ -250,3 +250,542 @@
 	and Q.id=tests.question_id
 	and AN.id=tests.answer_id
 	--in (select answer_id from tests where student_id=1)
+2018-04-25 14:18:40.736 EEST [604] ОШИБКА:  ошибка синтаксиса (примерное положение: "whereTH") (символ 113)
+2018-04-25 14:18:40.736 EEST [604] ОПЕРАТОР:  select T.test_id, TH.theme, Q.question, AN.answer, AN.is_right from themes TH, questions Q, answers AN, tests T whereTH.id=T.theme_id and Q.id=T.question_id and AN.id=T.answer_id and T.student_id=1order by test_id
+2018-04-25 14:34:27.947 EEST [5140] СООБЩЕНИЕ:  не удалось получить данные от клиента: An existing connection was forcibly closed by the remote host.
+	
+2018-04-25 14:52:16.320 EEST [7464] ОШИБКА:  ошибка синтаксиса (примерное положение: "CONSTRAINT") (символ 7)
+2018-04-25 14:52:16.320 EEST [7464] ОПЕРАТОР:  alter CONSTRAINT questions_theme_id_fkey FOREIGN KEY (theme_id)
+	        REFERENCES public.themes (id) MATCH SIMPLE
+	        ON UPDATE CASCADE
+	        ON DELETE CASCADE
+2018-04-25 15:44:44.905 EEST [4348] ОШИБКА:  ошибка синтаксиса (примерное положение: "PASSWORD") (символ 60)
+2018-04-25 15:44:44.905 EEST [4348] ОПЕРАТОР:  CREATE DATABASE "TESTING1"
+	    WITH 
+	    OWNER = postgres
+		PASSWORD = 'admin'
+	    ENCODING = 'UTF8'
+	    LC_COLLATE = 'Russian_Russia.1251'
+	    LC_CTYPE = 'Russian_Russia.1251'
+	    TABLESPACE = pg_default
+	    CONNECTION LIMIT = -1;
+	COMMENT ON DATABASE "TESTING1" IS 'lesson 24';
+	COMMIT WORK;
+	
+	/* SET NAMES WIN1251;
+	SET SQL DIALECT 3; */
+	CONNECT 'TESTING1' USER 'postgres' PASSWORD 'admin';
+	SET AUTODDL ON;
+	
+	CREATE TABLE public.themes
+	(
+	    id integer NOT NULL DEFAULT nextval('themes_id_seq'::regclass),
+	    theme character varying(50) COLLATE pg_catalog."default" NOT NULL,
+	    CONSTRAINT themes_pkey PRIMARY KEY (id)
+	)
+	WITH (OIDS = FALSE)
+	TABLESPACE pg_default;
+	ALTER TABLE public.themes OWNER to postgres;
+	COMMIT WORK;
+	
+	CREATE TABLE public.questions
+	(
+	    id integer NOT NULL DEFAULT nextval('questions_id_seq'::regclass),
+	    theme_id integer NOT NULL,
+	    question character varying(100) COLLATE pg_catalog."default" NOT NULL,
+	    --"NUMBER" integer,
+	    CONSTRAINT questions_pkey PRIMARY KEY (id),
+	    CONSTRAINT questions_theme_id_fkey FOREIGN KEY (theme_id)
+	        REFERENCES public.themes (id) MATCH SIMPLE
+	        ON UPDATE CASCADE
+	        ON DELETE CASCADE
+	)
+	WITH (OIDS = FALSE)
+	TABLESPACE pg_default;
+	ALTER TABLE public.questions OWNER to postgres;
+	COMMIT WORK;
+	
+	CREATE TABLE public.answers
+	(
+	    id integer NOT NULL DEFAULT nextval('answers_id_seq'::regclass),
+	    question_id integer NOT NULL,
+	    variant character(1) COLLATE pg_catalog."default" NOT NULL,
+	    answer character varying(100) COLLATE pg_catalog."default" NOT NULL,
+	    is_right boolean,
+	    CONSTRAINT answers_pkey PRIMARY KEY (id),
+	    CONSTRAINT answers_question_id_fkey FOREIGN KEY (question_id)
+	        REFERENCES public.questions (id) MATCH SIMPLE
+	        ON UPDATE CASCADE
+	        ON DELETE CASCADE
+	)
+	WITH (OIDS = FALSE)
+	TABLESPACE pg_default;
+	ALTER TABLE public.answers OWNER to postgres;
+	COMMIT WORK;
+	
+	CREATE TABLE public.students
+	(
+	    id integer NOT NULL DEFAULT nextval('students_id_seq'::regclass),
+	    f_name character varying(50) COLLATE pg_catalog."default" NOT NULL,
+	    l_name character varying(50) COLLATE pg_catalog."default" NOT NULL,
+	    CONSTRAINT students_pkey PRIMARY KEY (id)
+	)
+	WITH (OIDS = FALSE)
+	TABLESPACE pg_default;
+	ALTER TABLE public.students OWNER to postgres;
+	COMMIT WORK;
+	
+	CREATE TABLE public.tests
+	(
+	    test_id integer NOT NULL,
+	    student_id integer NOT NULL,
+	    theme_id integer NOT NULL,
+	    question_id integer NOT NULL,
+	    answer_id integer NOT NULL,
+	    id integer NOT NULL DEFAULT nextval('tests_id_seq'::regclass),
+	    CONSTRAINT tests_pkey PRIMARY KEY (id),
+	    CONSTRAINT tests_answer_id_fkey FOREIGN KEY (answer_id)
+	        REFERENCES public.answers (id) MATCH SIMPLE
+	        ON UPDATE CASCADE
+	        ON DELETE CASCADE,
+	    CONSTRAINT tests_question_id_fkey FOREIGN KEY (question_id)
+	        REFERENCES public.questions (id) MATCH SIMPLE
+	        ON UPDATE CASCADE
+	        ON DELETE CASCADE,
+	    CONSTRAINT tests_student_id_fkey FOREIGN KEY (student_id)
+	        REFERENCES public.students (id) MATCH SIMPLE
+	        ON UPDATE CASCADE
+	        ON DELETE CASCADE,
+	    CONSTRAINT tests_theme_id_fkey FOREIGN KEY (theme_id)
+	        REFERENCES public.themes (id) MATCH SIMPLE
+	        ON UPDATE CASCADE
+	        ON DELETE CASCADE
+	)
+	WITH (OIDS = FALSE)
+	TABLESPACE pg_default;
+	ALTER TABLE public.tests OWNER to postgres;
+	COMMIT WORK;
+	
+	insert into themes values (1, 'Java');
+	insert into themes values (2, 'География');
+	COMMIT WORK;
+	
+	insert into questions (theme_id, question) values (1, 'int - это...');
+	insert into questions (theme_id, question) values (1, 'Выберите цикл с постусловием:');
+	insert into questions (theme_id, question) values (1, 'Ключевое слово final в начале объявления метода...');
+	insert into questions (theme_id, question) values (2, 'Столица Камбоджи');
+	insert into questions (theme_id, question) values (2, 'Самая длинная и многоводная река Евразии');
+	insert into questions (theme_id, question) values (2, 'Страны, с которыми Украина граничит на севере');
+	COMMIT WORK;
+	
+	insert into answers values (1, 1, 'A', 'целочисленный тип данных с диапазоном значений от -128 до 127', false);
+	insert into answers values (2, 1, 'B', 'тип данных, определяющий числовое значение с плавающей точкой одинарной точности', false);
+	insert into answers values (3, 1, 'C', 'целочисленный тип данных с диапазоном значений от -2147483648 до 2147483647', true);
+	insert into answers values (4, 2, 'A', 'for(int i=0; i<10; i++) { }', false);
+	insert into answers values (5, 2, 'B', '{ } while(i<10)', true);
+	insert into answers values (6, 2, 'C', 'while(i<10) { }', false);
+	insert into answers values (7, 3, 'A', 'не позволяет вызвать его за пределами класса, в котором он объявлен', false);
+	insert into answers values (8, 3, 'B', 'предотвращает его переопределение', true);
+	insert into answers values (9, 3, 'C', 'позволяет вызвать данный метод лишь единожды', false);
+	insert into answers values (10, 4, 'A', 'Катманду', false);
+	insert into answers values (11, 4, 'B', 'Москва', false);
+	insert into answers values (12, 4, 'C', 'Пномпень', true);
+	insert into answers values (13, 5, 'A', 'Янцзы', true);
+	insert into answers values (14, 5, 'B', 'Днепр', false);
+	insert into answers values (15, 5, 'C', 'Волга', false);
+	insert into answers values (13, 5, 'A', 'Беларусь и Россия', true);
+	insert into answers values (14, 5, 'B', 'Румыния и Молдавия', false);
+	insert into answers values (15, 5, 'C', 'Словакия и Венгрия', false);
+	COMMIT WORK;
+2018-04-25 15:46:02.118 EEST [4348] ОШИБКА:  ошибка синтаксиса (примерное положение: "PASSWORD") (символ 60)
+2018-04-25 15:46:02.118 EEST [4348] ОПЕРАТОР:  CREATE DATABASE "TESTING1"
+	    WITH 
+	    OWNER = postgres
+		PASSWORD = 'admin'
+	    ENCODING = 'UTF8'
+	    LC_COLLATE = 'Russian_Russia.1251'
+	    LC_CTYPE = 'Russian_Russia.1251'
+	    TABLESPACE = pg_default
+	    CONNECTION LIMIT = -1;
+	COMMENT ON DATABASE "TESTING1" IS 'lesson 24';
+	COMMIT WORK;
+	
+	/* SET NAMES WIN1251;
+	SET SQL DIALECT 3; */
+	CONNECT 'TESTING1' USER 'postgres' PASSWORD 'admin';
+	SET AUTODDL ON;
+	
+	CREATE TABLE public.themes
+	(
+	    id integer NOT NULL DEFAULT nextval('themes_id_seq'::regclass),
+	    theme character varying(50) COLLATE pg_catalog."default" NOT NULL,
+	    CONSTRAINT themes_pkey PRIMARY KEY (id)
+	)
+	WITH (OIDS = FALSE)
+	TABLESPACE pg_default;
+	ALTER TABLE public.themes OWNER to postgres;
+	COMMIT WORK;
+	
+	CREATE TABLE public.questions
+	(
+	    id integer NOT NULL DEFAULT nextval('questions_id_seq'::regclass),
+	    theme_id integer NOT NULL,
+	    question character varying(100) COLLATE pg_catalog."default" NOT NULL,
+	    --"NUMBER" integer,
+	    CONSTRAINT questions_pkey PRIMARY KEY (id),
+	    CONSTRAINT questions_theme_id_fkey FOREIGN KEY (theme_id)
+	        REFERENCES public.themes (id) MATCH SIMPLE
+	        ON UPDATE CASCADE
+	        ON DELETE CASCADE
+	)
+	WITH (OIDS = FALSE)
+	TABLESPACE pg_default;
+	ALTER TABLE public.questions OWNER to postgres;
+	COMMIT WORK;
+	
+	CREATE TABLE public.answers
+	(
+	    id integer NOT NULL DEFAULT nextval('answers_id_seq'::regclass),
+	    question_id integer NOT NULL,
+	    variant character(1) COLLATE pg_catalog."default" NOT NULL,
+	    answer character varying(100) COLLATE pg_catalog."default" NOT NULL,
+	    is_right boolean,
+	    CONSTRAINT answers_pkey PRIMARY KEY (id),
+	    CONSTRAINT answers_question_id_fkey FOREIGN KEY (question_id)
+	        REFERENCES public.questions (id) MATCH SIMPLE
+	        ON UPDATE CASCADE
+	        ON DELETE CASCADE
+	)
+	WITH (OIDS = FALSE)
+	TABLESPACE pg_default;
+	ALTER TABLE public.answers OWNER to postgres;
+	COMMIT WORK;
+	
+	CREATE TABLE public.students
+	(
+	    id integer NOT NULL DEFAULT nextval('students_id_seq'::regclass),
+	    f_name character varying(50) COLLATE pg_catalog."default" NOT NULL,
+	    l_name character varying(50) COLLATE pg_catalog."default" NOT NULL,
+	    CONSTRAINT students_pkey PRIMARY KEY (id)
+	)
+	WITH (OIDS = FALSE)
+	TABLESPACE pg_default;
+	ALTER TABLE public.students OWNER to postgres;
+	COMMIT WORK;
+	
+	CREATE TABLE public.tests
+	(
+	    test_id integer NOT NULL,
+	    student_id integer NOT NULL,
+	    theme_id integer NOT NULL,
+	    question_id integer NOT NULL,
+	    answer_id integer NOT NULL,
+	    id integer NOT NULL DEFAULT nextval('tests_id_seq'::regclass),
+	    CONSTRAINT tests_pkey PRIMARY KEY (id),
+	    CONSTRAINT tests_answer_id_fkey FOREIGN KEY (answer_id)
+	        REFERENCES public.answers (id) MATCH SIMPLE
+	        ON UPDATE CASCADE
+	        ON DELETE CASCADE,
+	    CONSTRAINT tests_question_id_fkey FOREIGN KEY (question_id)
+	        REFERENCES public.questions (id) MATCH SIMPLE
+	        ON UPDATE CASCADE
+	        ON DELETE CASCADE,
+	    CONSTRAINT tests_student_id_fkey FOREIGN KEY (student_id)
+	        REFERENCES public.students (id) MATCH SIMPLE
+	        ON UPDATE CASCADE
+	        ON DELETE CASCADE,
+	    CONSTRAINT tests_theme_id_fkey FOREIGN KEY (theme_id)
+	        REFERENCES public.themes (id) MATCH SIMPLE
+	        ON UPDATE CASCADE
+	        ON DELETE CASCADE
+	)
+	WITH (OIDS = FALSE)
+	TABLESPACE pg_default;
+	ALTER TABLE public.tests OWNER to postgres;
+	COMMIT WORK;
+	
+	insert into themes values (1, 'Java');
+	insert into themes values (2, 'География');
+	COMMIT WORK;
+	
+	insert into questions (theme_id, question) values (1, 'int - это...');
+	insert into questions (theme_id, question) values (1, 'Выберите цикл с постусловием:');
+	insert into questions (theme_id, question) values (1, 'Ключевое слово final в начале объявления метода...');
+	insert into questions (theme_id, question) values (2, 'Столица Камбоджи');
+	insert into questions (theme_id, question) values (2, 'Самая длинная и многоводная река Евразии');
+	insert into questions (theme_id, question) values (2, 'Страны, с которыми Украина граничит на севере');
+	COMMIT WORK;
+	
+	insert into answers values (1, 1, 'A', 'целочисленный тип данных с диапазоном значений от -128 до 127', false);
+	insert into answers values (2, 1, 'B', 'тип данных, определяющий числовое значение с плавающей точкой одинарной точности', false);
+	insert into answers values (3, 1, 'C', 'целочисленный тип данных с диапазоном значений от -2147483648 до 2147483647', true);
+	insert into answers values (4, 2, 'A', 'for(int i=0; i<10; i++) { }', false);
+	insert into answers values (5, 2, 'B', '{ } while(i<10)', true);
+	insert into answers values (6, 2, 'C', 'while(i<10) { }', false);
+	insert into answers values (7, 3, 'A', 'не позволяет вызвать его за пределами класса, в котором он объявлен', false);
+	insert into answers values (8, 3, 'B', 'предотвращает его переопределение', true);
+	insert into answers values (9, 3, 'C', 'позволяет вызвать данный метод лишь единожды', false);
+	insert into answers values (10, 4, 'A', 'Катманду', false);
+	insert into answers values (11, 4, 'B', 'Москва', false);
+	insert into answers values (12, 4, 'C', 'Пномпень', true);
+	insert into answers values (13, 5, 'A', 'Янцзы', true);
+	insert into answers values (14, 5, 'B', 'Днепр', false);
+	insert into answers values (15, 5, 'C', 'Волга', false);
+	insert into answers values (13, 5, 'A', 'Беларусь и Россия', true);
+	insert into answers values (14, 5, 'B', 'Румыния и Молдавия', false);
+	insert into answers values (15, 5, 'C', 'Словакия и Венгрия', false);
+	COMMIT WORK;
+2018-04-25 16:00:06.072 EEST [4348] ОШИБКА:  ошибка синтаксиса (примерное положение: "PASSWORD") (символ 60)
+2018-04-25 16:00:06.072 EEST [4348] ОПЕРАТОР:  CREATE DATABASE "TESTING1"
+	    WITH 
+	    OWNER = postgres
+		PASSWORD = 'admin'
+	    ENCODING = 'UTF8'
+	    LC_COLLATE = 'Russian_Russia.1251'
+	    LC_CTYPE = 'Russian_Russia.1251'
+	    TABLESPACE = pg_default
+	    CONNECTION LIMIT = -1;
+	COMMENT ON DATABASE "TESTING1" IS 'lesson 24';
+	COMMIT WORK;
+	
+	/* SET NAMES WIN1251;
+	SET SQL DIALECT 3; */
+	CONNECT 'TESTING1' USER 'postgres' PASSWORD 'admin';
+	SET AUTODDL ON;
+	
+	CREATE TABLE public.themes
+	(
+	    id integer NOT NULL DEFAULT nextval('themes_id_seq'::regclass),
+	    theme character varying(50) COLLATE pg_catalog."default" NOT NULL,
+	    CONSTRAINT themes_pkey PRIMARY KEY (id)
+	)
+	WITH (OIDS = FALSE)
+	TABLESPACE pg_default;
+	ALTER TABLE public.themes OWNER to postgres;
+	COMMIT WORK;
+	
+	CREATE TABLE public.questions
+	(
+	    id integer NOT NULL DEFAULT nextval('questions_id_seq'::regclass),
+	    theme_id integer NOT NULL,
+	    question character varying(100) COLLATE pg_catalog."default" NOT NULL,
+	    --"NUMBER" integer,
+	    CONSTRAINT questions_pkey PRIMARY KEY (id),
+	    CONSTRAINT questions_theme_id_fkey FOREIGN KEY (theme_id)
+	        REFERENCES public.themes (id) MATCH SIMPLE
+	        ON UPDATE CASCADE
+	        ON DELETE CASCADE
+	)
+	WITH (OIDS = FALSE)
+	TABLESPACE pg_default;
+	ALTER TABLE public.questions OWNER to postgres;
+	COMMIT WORK;
+	
+	CREATE TABLE public.answers
+	(
+	    id integer NOT NULL DEFAULT nextval('answers_id_seq'::regclass),
+	    question_id integer NOT NULL,
+	    variant character(1) COLLATE pg_catalog."default" NOT NULL,
+	    answer character varying(100) COLLATE pg_catalog."default" NOT NULL,
+	    is_right boolean,
+	    CONSTRAINT answers_pkey PRIMARY KEY (id),
+	    CONSTRAINT answers_question_id_fkey FOREIGN KEY (question_id)
+	        REFERENCES public.questions (id) MATCH SIMPLE
+	        ON UPDATE CASCADE
+	        ON DELETE CASCADE
+	)
+	WITH (OIDS = FALSE)
+	TABLESPACE pg_default;
+	ALTER TABLE public.answers OWNER to postgres;
+	COMMIT WORK;
+	
+	CREATE TABLE public.students
+	(
+	    id integer NOT NULL DEFAULT nextval('students_id_seq'::regclass),
+	    f_name character varying(50) COLLATE pg_catalog."default" NOT NULL,
+	    l_name character varying(50) COLLATE pg_catalog."default" NOT NULL,
+	    CONSTRAINT students_pkey PRIMARY KEY (id)
+	)
+	WITH (OIDS = FALSE)
+	TABLESPACE pg_default;
+	ALTER TABLE public.students OWNER to postgres;
+	COMMIT WORK;
+	
+	CREATE TABLE public.tests
+	(
+	    test_id integer NOT NULL,
+	    student_id integer NOT NULL,
+	    theme_id integer NOT NULL,
+	    question_id integer NOT NULL,
+	    answer_id integer NOT NULL,
+	    id integer NOT NULL DEFAULT nextval('tests_id_seq'::regclass),
+	    CONSTRAINT tests_pkey PRIMARY KEY (id),
+	    CONSTRAINT tests_answer_id_fkey FOREIGN KEY (answer_id)
+	        REFERENCES public.answers (id) MATCH SIMPLE
+	        ON UPDATE CASCADE
+	        ON DELETE CASCADE,
+	    CONSTRAINT tests_question_id_fkey FOREIGN KEY (question_id)
+	        REFERENCES public.questions (id) MATCH SIMPLE
+	        ON UPDATE CASCADE
+	        ON DELETE CASCADE,
+	    CONSTRAINT tests_student_id_fkey FOREIGN KEY (student_id)
+	        REFERENCES public.students (id) MATCH SIMPLE
+	        ON UPDATE CASCADE
+	        ON DELETE CASCADE,
+	    CONSTRAINT tests_theme_id_fkey FOREIGN KEY (theme_id)
+	        REFERENCES public.themes (id) MATCH SIMPLE
+	        ON UPDATE CASCADE
+	        ON DELETE CASCADE
+	)
+	WITH (OIDS = FALSE)
+	TABLESPACE pg_default;
+	ALTER TABLE public.tests OWNER to postgres;
+	COMMIT WORK;
+	
+	insert into themes values (1, 'Java');
+	insert into themes values (2, 'География');
+	COMMIT WORK;
+	
+	insert into questions (theme_id, question) values (1, 'int - это...');
+	insert into questions (theme_id, question) values (1, 'Выберите цикл с постусловием:');
+	insert into questions (theme_id, question) values (1, 'Ключевое слово final в начале объявления метода...');
+	insert into questions (theme_id, question) values (2, 'Столица Камбоджи');
+	insert into questions (theme_id, question) values (2, 'Самая длинная и многоводная река Евразии');
+	insert into questions (theme_id, question) values (2, 'Страны, с которыми Украина граничит на севере');
+	COMMIT WORK;
+	
+	insert into answers values (1, 1, 'A', 'целочисленный тип данных с диапазоном значений от -128 до 127', false);
+	insert into answers values (2, 1, 'B', 'тип данных, определяющий числовое значение с плавающей точкой одинарной точности', false);
+	insert into answers values (3, 1, 'C', 'целочисленный тип данных с диапазоном значений от -2147483648 до 2147483647', true);
+	insert into answers values (4, 2, 'A', 'for(int i=0; i<10; i++) { }', false);
+	insert into answers values (5, 2, 'B', '{ } while(i<10)', true);
+	insert into answers values (6, 2, 'C', 'while(i<10) { }', false);
+	insert into answers values (7, 3, 'A', 'не позволяет вызвать его за пределами класса, в котором он объявлен', false);
+	insert into answers values (8, 3, 'B', 'предотвращает его переопределение', true);
+	insert into answers values (9, 3, 'C', 'позволяет вызвать данный метод лишь единожды', false);
+	insert into answers values (10, 4, 'A', 'Катманду', false);
+	insert into answers values (11, 4, 'B', 'Москва', false);
+	insert into answers values (12, 4, 'C', 'Пномпень', true);
+	insert into answers values (13, 5, 'A', 'Янцзы', true);
+	insert into answers values (14, 5, 'B', 'Днепр', false);
+	insert into answers values (15, 5, 'C', 'Волга', false);
+	insert into answers values (13, 5, 'A', 'Беларусь и Россия', true);
+	insert into answers values (14, 5, 'B', 'Румыния и Молдавия', false);
+	insert into answers values (15, 5, 'C', 'Словакия и Венгрия', false);
+	COMMIT WORK;
+2018-04-25 16:00:26.276 EEST [4348] ОШИБКА:  ошибка синтаксиса (примерное положение: "PASSWORD") (символ 60)
+2018-04-25 16:00:26.276 EEST [4348] ОПЕРАТОР:  CREATE DATABASE "TESTING1"
+	    WITH 
+	    OWNER = postgres
+		PASSWORD = 'admin'
+	    ENCODING = 'UTF8'
+	    LC_COLLATE = 'Russian_Russia.1251'
+	    LC_CTYPE = 'Russian_Russia.1251'
+	    TABLESPACE = pg_default
+	    CONNECTION LIMIT = -1;
+	COMMENT ON DATABASE "TESTING1" IS 'lesson 24';
+	COMMIT WORK;
+2018-04-25 16:00:59.881 EEST [4348] ОШИБКА:  ошибка синтаксиса (примерное положение: "DATABASE") (символ 93)
+2018-04-25 16:00:59.881 EEST [4348] ОПЕРАТОР:  EXPLAIN (FORMAT JSON, ANALYZE OFF, VERBOSE OFF, COSTS OFF, BUFFERS OFF, TIMING OFF)  CREATE DATABASE "TESTING1"
+	    WITH 
+	    OWNER = postgres
+		PASSWORD = 'admin'
+	    ENCODING = 'UTF8'
+	    LC_COLLATE = 'Russian_Russia.1251'
+	    LC_CTYPE = 'Russian_Russia.1251'
+	    TABLESPACE = pg_default
+	    CONNECTION LIMIT = -1;
+	COMMENT ON DATABASE "TESTING1" IS 'lesson 24';
+	COMMIT WORK;
+2018-04-25 16:01:03.978 EEST [4348] ОШИБКА:  ошибка синтаксиса (примерное положение: "DATABASE") (символ 92)
+2018-04-25 16:01:03.978 EEST [4348] ОПЕРАТОР:  EXPLAIN (FORMAT JSON, ANALYZE ON, VERBOSE OFF, COSTS OFF, BUFFERS OFF, TIMING OFF)  CREATE DATABASE "TESTING1"
+	    WITH 
+	    OWNER = postgres
+		PASSWORD = 'admin'
+	    ENCODING = 'UTF8'
+	    LC_COLLATE = 'Russian_Russia.1251'
+	    LC_CTYPE = 'Russian_Russia.1251'
+	    TABLESPACE = pg_default
+	    CONNECTION LIMIT = -1;
+	COMMENT ON DATABASE "TESTING1" IS 'lesson 24';
+	COMMIT WORK;
+2018-04-25 16:01:16.577 EEST [4348] ОШИБКА:  ошибка синтаксиса (примерное положение: "DATABASE") (символ 91)
+2018-04-25 16:01:16.577 EEST [4348] ОПЕРАТОР:  EXPLAIN (FORMAT JSON, ANALYZE ON, VERBOSE ON, COSTS OFF, BUFFERS OFF, TIMING OFF)  CREATE DATABASE "TESTING1"
+	    WITH 
+	    OWNER = postgres
+		PASSWORD = 'admin'
+	    ENCODING = 'UTF8'
+	    LC_COLLATE = 'Russian_Russia.1251'
+	    LC_CTYPE = 'Russian_Russia.1251'
+	    TABLESPACE = pg_default
+	    CONNECTION LIMIT = -1;
+	COMMENT ON DATABASE "TESTING1" IS 'lesson 24';
+	COMMIT WORK;
+2018-04-25 16:01:46.924 EEST [4348] ОШИБКА:  CREATE DATABASE не может выполняться внутри функции или строки, включающей несколько команд
+2018-04-25 16:01:46.924 EEST [4348] ОПЕРАТОР:  CREATE DATABASE "TESTING1"
+	    WITH 
+	    OWNER = postgres
+		--PASSWORD = 'admin'
+	    ENCODING = 'UTF8'
+	    LC_COLLATE = 'Russian_Russia.1251'
+	    LC_CTYPE = 'Russian_Russia.1251'
+	    TABLESPACE = pg_default
+	    CONNECTION LIMIT = -1;
+	COMMENT ON DATABASE "TESTING1" IS 'lesson 24';
+	COMMIT WORK;
+2018-04-25 16:03:25.521 EEST [4348] ОШИБКА:  ошибка синтаксиса (примерное положение: "if") (символ 28)
+2018-04-25 16:03:25.521 EEST [4348] ОПЕРАТОР:  CREATE TABLE public.themes if not exists
+	(
+	    id integer NOT NULL DEFAULT nextval('themes_id_seq'::regclass),
+	    theme character varying(50) COLLATE pg_catalog."default" NOT NULL,
+	    CONSTRAINT themes_pkey PRIMARY KEY (id)
+	)
+	WITH (OIDS = FALSE)
+	TABLESPACE pg_default;
+	ALTER TABLE public.themes OWNER to postgres;
+	COMMIT WORK;
+2018-04-25 16:03:50.475 EEST [4348] ОШИБКА:  текущая транзакция прервана, команды до конца блока транзакции игнорируются
+2018-04-25 16:03:50.475 EEST [4348] ОПЕРАТОР:  CREATE TABLE public.themes --if not exists
+	(
+	    id integer NOT NULL DEFAULT nextval('themes_id_seq'::regclass),
+	    theme character varying(50) COLLATE pg_catalog."default" NOT NULL,
+	    CONSTRAINT themes_pkey PRIMARY KEY (id)
+	)
+	WITH (OIDS = FALSE)
+	TABLESPACE pg_default;
+	ALTER TABLE public.themes OWNER to postgres;
+	COMMIT WORK;
+2018-04-25 16:04:27.552 EEST [4348] ОШИБКА:  текущая транзакция прервана, команды до конца блока транзакции игнорируются
+2018-04-25 16:04:27.552 EEST [4348] ОПЕРАТОР:  CREATE TABLE public.themes --if not exists
+	(
+	    id integer NOT NULL DEFAULT nextval('themes_id_seq'::regclass),
+	    theme character varying(50) COLLATE pg_catalog."default" NOT NULL,
+	    CONSTRAINT themes_pkey PRIMARY KEY (id)
+	)
+	WITH (OIDS = FALSE)
+	TABLESPACE pg_default;
+	ALTER TABLE public.themes OWNER to postgres;
+	COMMIT WORK;
+2018-04-25 16:04:44.246 EEST [4348] ОШИБКА:  текущая транзакция прервана, команды до конца блока транзакции игнорируются
+2018-04-25 16:04:44.246 EEST [4348] ОПЕРАТОР:  CREATE TABLE public.themes --if not exists
+	(
+	    id integer NOT NULL DEFAULT nextval('themes_id_seq'::regclass),
+	    theme character varying(50) COLLATE pg_catalog."default" NOT NULL,
+	    CONSTRAINT themes_pkey PRIMARY KEY (id)
+	)
+	WITH (OIDS = FALSE)
+	TABLESPACE pg_default;
+	ALTER TABLE public.themes OWNER to postgres;
+	COMMIT WORK;
+2018-04-25 16:16:24.382 EEST [4348] СООБЩЕНИЕ:  не удалось получить данные от клиента: An existing connection was forcibly closed by the remote host.
+	
+2018-04-25 16:16:24.382 EEST [6772] СООБЩЕНИЕ:  не удалось получить данные от клиента: An existing connection was forcibly closed by the remote host.
+	
+2018-04-25 16:16:24.393 EEST [3212] СООБЩЕНИЕ:  не удалось получить данные от клиента: An existing connection was forcibly closed by the remote host.
+	
+2018-04-25 16:16:24.459 EEST [7116] СООБЩЕНИЕ:  не удалось получить данные от клиента: An existing connection was forcibly closed by the remote host.
+	
+2018-04-25 16:24:45.148 EEST [5508] СООБЩЕНИЕ:  не удалось получить данные от клиента: An existing connection was forcibly closed by the remote host.
+	
+2018-04-25 16:24:45.148 EEST [436] СООБЩЕНИЕ:  не удалось получить данные от клиента: An existing connection was forcibly closed by the remote host.
+	

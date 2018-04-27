@@ -8,8 +8,6 @@ import java.sql.Statement;
 public class Main {
 
     public static void main(String[] args) {
-        //Main m = new Main();
-        //m.testDatabase();
         new Test().run();
     }
 
