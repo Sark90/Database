@@ -38,53 +38,80 @@ public class Test {
             for (String s: insetScript) {
                 stmt.execute(s);
             }
+            rs.close();
+            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     private void menu() {
-        System.out.print("1. Тестирование\n2. Результаты пройденных тестов\nВведите № команды: ");
+        System.out.print("\n1. Тестирование\n2. Результаты пройденных тестов\nВведите № команды: ");
         int n;
         Scanner scanner = new Scanner(System.in);
         while (true) {
             n = scanner.nextInt();
             if (n == 1 || n == 2) break;
         }
-        System.out.println();
         if (n == 1) runTest();
         else showResults();
     }
 
     private void showResults() {
         try {
-            Statement sTests = con.createStatement();
-            ResultSet rsTests = sTests.executeQuery("select T.test_id, TH.theme, Q.question, AN.answer, " +
+            Statement sResults = con.createStatement();
+            ResultSet rsResults = sResults.executeQuery("select T.test_id, TH.theme, Q.question, AN.answer, " +
                     "AN.is_right from themes TH, questions Q, answers AN, tests T where TH.id=T.theme_id " +
                     "and Q.id=T.question_id and AN.id=T.answer_id and T.student_id=" + studentID +
-                    "order by test_id");  //order by theme_id, question_id
-            int testsNum = 0, rightNum = 0;
-            while (rsTests.next()) {
-                System.out.println("\tТест ID " + rsTests.getInt(1));
-                System.out.println("Тема: " + rsTests.getString(2));
-                System.out.println("Вопрос: " + rsTests.getString(3));
-                System.out.print("Ответ: " + rsTests.getString(4) + " (");
-                testsNum++;
-                if (rsTests.getBoolean(5)) {
+                    "order by test_id");
+            int questionsNum = 0, rightNum = 0, testID = 0;
+            while (rsResults.next()) {
+                if (testID != rsResults.getInt(1)) {
+                    testID = rsResults.getInt(1);
+                    System.out.println("\n\tТест ID " + testID);
+                    System.out.println("\tТема: " + rsResults.getString(2));
+                }
+                System.out.println("\nВопрос: " + rsResults.getString(3));
+                System.out.print("Ответ: " + rsResults.getString(4) + " (");
+                questionsNum++;
+                if (rsResults.getBoolean(5)) {
                     System.out.println("верно)");
                     rightNum++;
                 } else System.out.println("неверно)");
             }
-            rsTests.close();
-            sTests.close();
-            System.out.println("\tВерных ответов " + rightNum + " из " + testsNum);
+            rsResults = sResults.executeQuery("SELECT COUNT (DISTINCT test_id) from tests where student_id=" +
+                    studentID);
+            rsResults.next();
+            int testsNum = rsResults.getInt(1);
+            System.out.println("\nПройдено тестов: " + testsNum);
+            if (testsNum == 0) return;
+                rsResults = sResults.executeQuery("SELECT DISTINCT test_id from tests where student_id=" +
+                        studentID);
+                while (rsResults.next()) {
+                    testID = rsResults.getInt(1);
+                    Statement s = con.createStatement();
+                    ResultSet rs = s.executeQuery("SELECT COUNT (id) from answers where is_right=true " +
+                            "and id in (SELECT answer_id from tests where student_id=" + studentID +
+                            " and test_id=" + testID + ")");
+                    rs.next();
+                    System.out.print("В тесте ID " + testID + " верных ответов " + rs.getInt(1));
+                    rs = s.executeQuery("SELECT COUNT (id) from answers where id in (SELECT answer_id from " +
+                            "tests where student_id=" + studentID + " and test_id=" + testID + ")");
+                    rs.next();
+                    System.out.println(" из " + rs.getInt(1));
+                    rs.close();
+                    s.close();
+                }
+            rsResults.close();
+            sResults.close();
+            System.out.println("Всего верных ответов " + rightNum + " из " + questionsNum);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     private void runTest() {
-        System.out.println("Темы для тестов:");
+        System.out.println("\nТемы для тестов:");
         try {
             Statement sMaxID = con.createStatement();
             ResultSet rsMaxID = sMaxID.executeQuery("select max(test_id) from tests");
